@@ -1,20 +1,9 @@
 <template>
+  <!-- Remove the top settings section -->
   <div class="main-container">
     <!-- Left side - Key Editor -->
     <div class="left-panel overflow-auto" :style="{ width: leftPanelWidth + 'px' }">
       <div class="p-4">
-        <!-- Settings section -->
-        <div v-if="settingsOpen" class="mb-4 flex gap-2">
-          <label class="flex items-center gap-2">
-            <input v-model="userSettings.reduceKeymapColors" type="checkbox" class="checkbox" />
-            <span>Reduce keymap colors</span>
-          </label>
-          <label class="flex items-center gap-2">
-            <input v-model="userSettings.autoSelectNextKey" type="checkbox" class="checkbox" />
-            <span>Auto-select next key</span>
-          </label>
-        </div>
-
         <!-- Key options and picker -->
         <div class="my-4">
           <p class="mb-2 text-sm font-bold">
@@ -78,6 +67,10 @@
               <i class="mdi mdi-content-duplicate"></i>
               Duplicate
             </button>
+            <button class="btn btn-sm" @click="clearLayer">
+              <i class="mdi mdi-delete"></i>
+              Clear
+            </button>
           </div>
         </div>
       </div>
@@ -131,6 +124,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Add this popup menu -->
+    
   </div>
 </template>
 
@@ -191,6 +187,9 @@ const removeLayer = () => {
   if (selectedLayer.value === keyboardStore.keymap.length - 1 && selectedLayer.value !== 0) {
     selectedLayer.value = keyboardStore.keymap.length - 2
   }
+}
+const clearLayer = () => {
+  keyboardStore.keymap[selectedLayer.value].fill('KC.TRNS')
 }
 const duplicateLayer = () => {
   // Duplicate keymap
@@ -434,5 +433,35 @@ onMounted(() => {
 
 .right-panel {
   min-width: 400px;
+}
+
+.settings-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.settings-content {
+  background: var(--base-100);
+  border: 1px solid var(--base-300);
+  border-radius: 8px;
+  min-width: 300px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings-header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--base-300);
+}
+
+.settings-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

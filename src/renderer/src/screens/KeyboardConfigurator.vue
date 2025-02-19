@@ -63,6 +63,9 @@
       <li>
         <router-link to="/configurator/rgb"><i class="mdi mdi-led-on"></i>RGB</router-link>
       </li>
+      <li>
+        <router-link to="/configurator/settings"><i class="mdi mdi-settings"></i>Settings</router-link>
+      </li>
     </ul>
     <div class="flex h-full w-full flex-col overflow-y-auto">
       <div class="z-10 flex items-center justify-between bg-base-100 py-4 shadow-xl">

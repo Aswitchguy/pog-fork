@@ -13,6 +13,7 @@ import RawKeymapEditor from '../components/RawKeymapEditor.vue'
 import KeyboardName from '../components/KeyboardName.vue'
 import CoordMap from '../components/CoordMap.vue'
 import RgbSetup from '../components/RgbSetup.vue'
+import Settings from '../components/Settings.vue'
 import Community from '../components/Community.vue'
 // import Debug from '../components/debug.vue'
 
@@ -135,6 +136,11 @@ const routes = [
         path: 'rgb',
         name: 'RGB',
         component: RgbSetup
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: Settings
       }
     ]
   }

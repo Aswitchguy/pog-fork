@@ -510,9 +510,23 @@ export class Keyboard {
       if (configContents.diodeDirection) this.diodeDirection = configContents.diodeDirection
       if (configContents.directPins) this.directPins = configContents.directPins
       if (configContents.controller) this.controller = configContents.controller
-      if (configContents.keymap) this.keymap = configContents.keymap
+      if (configContents.keymap) {
+        this.keymap = configContents.keymap
+      } else {
+        this.keymap = [[]]
+      }
       if (configContents.layouts) this.layouts = configContents.layouts
-      if (configContents.layers) this.layers = configContents.layers
+      if (configContents.layers) {
+        this.layers = configContents.layers
+        while (this.keymap.length < this.layers.length) {
+          this.keymap.push([])
+        }
+        if (this.keymap.length > this.layers.length) {
+          this.keymap = this.keymap.slice(0, this.layers.length)
+        }
+      } else {
+        this.layers = []
+      }
 
       if (configContents.splitPinA) this.splitPinA = configContents.splitPinA
       if (configContents.splitPinB) this.splitPinB = configContents.splitPinB
@@ -560,7 +574,7 @@ export class Keyboard {
     this.directPins = []
     this.diodeDirection = 'COL2ROW'
     this.controller = ''
-    this.keymap = []
+    this.keymap = [[]]
     this.layouts = []
     this.encoders = []
     this.encoderKeymap = []
