@@ -1,205 +1,22 @@
 <template>
     <div class="rgb-setup">
-      <div class="info-section">
-        <p class="my-4 rounded bg-base-300 p-4">
-          Info: To enable RGB you also will need a neopixel.mpy file in the lib folder on your
-          CircuitPython drive eg. adafruit-circuitpython-neopixel-py-6.3.11.zip as neopixel.py . You can
-          download that here:
-          <a
-            href="https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/releases"
-            class="underline"
-            target="_blank"
-            >Adafruit GitHub</a
-          >
-        </p>
-      </div>
-      <!-- Split container -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Info Section -->
-  
-        <!-- RGB Backlight Section -->
-        <div class="backlight-section p-4 border rounded">
-          <h2 class="text-xl font-bold mb-4">RGB Backlight</h2>
-          <div class="backlight-controls">
-            <label class="flex gap-4">
-              <input v-model="rgbEnabled" class="checkbox" type="checkbox" @change="toggleRgbEnabled" />
-              <p>Enable RGB</p>
-            </label>
-  
-            <div class="mb-4 flex">
-              <div class="grid grid-cols-2 gap-2">
-                <label>RGB Pin</label>
-                <input
-                  v-model="rgbPin"
-                  type="text"
-                  class="input input-bordered input-sm"
-                  placeholder="board.GP3"
-                  @change="savePin"
-                />
-                <label>RGB Number of LEDS</label>
-                <input
-                  v-model="rgbNumLeds"
-                  type="text"
-                  class="input input-bordered input-sm"
-                  placeholder="14"
-                  @change="saveNumLeds"
-                />
-                <label>Animation Mode</label>
-                <select
-                  v-model="rgbAnimationMode"
-                  class="select select-bordered input-sm mb-4"
-                  @change="saveMode"
-                >
-                  <option value="0">Off</option>
-                  <option value="1">Static</option>
-                  <option value="2">Static Standby</option>
-                  <option value="3">Breathing</option>
-                  <option value="4">Rainbow</option>
-                  <option value="5">Breathing Rainbow</option>
-                  <option value="6">Knight</option>
-                  <option value="7">Swirl</option>
-                  <option value="8">Custom</option>
-                </select>
-                <div
-                  v-if="rgbAnimationMode != 0 && rgbAnimationMode != 1 && rgbAnimationMode != 2"
-                  class="col-span-2 flex justify-between"
-                >
-                  <label>Animation Speed</label>
-                  <input
-                    v-model="rgbAnimationSpeed"
-                    type="text"
-                    class="input input-bordered input-sm"
-                    placeholder="1"
-                    @change="saveAnimationSpeed"
-                  />
-                </div>
-                <div
-                  v-if="rgbAnimationMode == 3 || rgbAnimationMode == 5 || rgbAnimationMode == 8"
-                  class="col-span-2 flex justify-between"
-                >
-                  <label>Breathe Center</label>
-                  <input
-                    v-model="rgbBreatheCenter"
-                    type="text"
-                    class="input input-bordered input-sm"
-                    placeholder="1"
-                    min="1"
-                    max="2.7"
-                    step="0.1"
-                    @change="saveBreatheCenter"
-                  />
-                </div>
-                <div
-                  v-if="rgbAnimationMode == 6 || rgbAnimationMode == 8"
-                  class="col-span-2 flex justify-between"
-                >
-                  <label>Knight Effect Length</label>
-                  <input
-                    v-model="rgbKnightEffectLength"
-                    type="text"
-                    class="input input-bordered input-sm"
-                    placeholder="1"
-                    @change="saveKnightEffectLength"
-                  />
-                </div>
-              </div>
-            </div>
-            <HsvColorPicker @change="saveColor" />
-          </div>
+        <!-- Settings section -->
+        <div class="mb-4 flex gap-2">
+          <label class="flex items-center gap-2">
+            <input v-model="userSettings.reduceKeymapColors" type="checkbox" class="checkbox" />
+            <span>Reduce keymap colors</span>
+          </label>
+          <label class="flex items-center gap-2">
+            <input v-model="userSettings.autoSelectNextKey" type="checkbox" class="checkbox" />
+            <span>Auto-select next key</span>
+          </label>
         </div>
-  
-        <!-- Individual Key Lighting Section -->
-        <div class="key-lighting-section p-4 border rounded">
-          <h2 class="text-xl font-bold mb-4">Per-Key RGB</h2>
-          <div class="key-lighting-controls">
-            <label class="flex gap-4">
-              <input v-model="rgbKeyEnabled" class="checkbox" type="checkbox" @change="toggleKeyRgbEnabled" />
-              <p>Enable RGB</p>
-            </label>
-            <div class="mb-4 flex">
-              <div class="grid grid-cols-2 gap-2">
-                <label>RGB Pin</label>
-                <input
-                  v-model="rgbKeyPin"
-                  type="text"
-                  class="input input-bordered input-sm"
-                  placeholder="board.GP3"
-                  @change="saveKeyPin"
-                />
-                <label>RGB Number of LEDS</label>
-                <input
-                  v-model="rgbKeyNumLeds"
-                  type="text"
-                  class="input input-bordered input-sm"
-                  placeholder="14"
-                  @change="saveKeyNumLeds"
-                />
-                <label>Animation Mode</label>
-                <select
-                  v-model="rgbKeyAnimationMode"
-                  class="select select-bordered input-sm mb-4"
-                  @change="saveKeyMode"
-                >
-                  <option value="0">Off</option>
-                  <option value="1">Static</option>
-                  <option value="2">Static Standby</option>
-                  <option value="3">Breathing</option>
-                  <option value="4">Rainbow</option>
-                  <option value="5">Breathing Rainbow</option>
-                  <option value="6">Knight</option>
-                  <option value="7">Swirl</option>
-                  <option value="8">Custom</option>
-                </select>
-                <div
-                  v-if="rgbKeyAnimationMode != 0 && rgbKeyAnimationMode != 1 && rgbKeyAnimationMode != 2"
-                  class="col-span-2 flex justify-between"
-                >
-                  <label>Animation Speed</label>
-                  <input
-                    v-model="rgbKeyAnimationSpeed"
-                    type="text"
-                    class="input input-bordered input-sm"
-                    placeholder="1"
-                    @change="saveKeyAnimationSpeed"
-                  />
-                </div>
-                <div
-                  v-if="rgbKeyAnimationMode == 3 || rgbKeyAnimationMode == 5 || rgbKeyAnimationMode == 8"
-                  class="col-span-2 flex justify-between"
-                >
-                  <label>Breathe Center</label>
-                  <input
-                    v-model="rgbKeyBreatheCenter"
-                    type="text"
-                    class="input input-bordered input-sm"
-                    placeholder="1"
-                    @change="saveKeyBreatheCenter"
-                  />
-                </div>
-                <div
-                  v-if="rgbKeyAnimationMode == 6 || rgbKeyAnimationMode == 8"
-                  class="col-span-2 flex justify-between"
-                >
-                  <label>Knight Effect Length</label>
-                  <input
-                    v-model="rgbKeyKnightEffectLength"
-                    type="text"
-                    class="input input-bordered input-sm"
-                    placeholder="1"
-                    @change="saveKeyKnightEffectLength"
-                  />
-                </div>
-              </div>
-            </div>
-            <HsvColorPicker @change="saveKeyColor" />
-          </div>
-        </div>
-      </div>
+
     </div>
   </template>
   
   <script lang="ts" setup>
-  import { keyboardStore } from '../store'
+  import { keyboardStore, selectedKeys, selectedLayer, userSettings } from '../store'
   import { onMounted, ref } from 'vue'
   import HsvColorPicker from './HsvColorPicker.vue'
   
